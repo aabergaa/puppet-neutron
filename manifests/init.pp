@@ -107,7 +107,7 @@
 
 # [*rpc_backend*]
 #   (optional) what rpc/queuing service to use
-#   Defaults to impl_kombu (rabbitmq)
+#   Defaults to impl_kombu (rabbitmq), 'rabbit' is now the standard for kilo
 #
 # [*rabbit_password*]
 # [*rabbit_host*]
@@ -397,8 +397,11 @@ class neutron (
     }
   }
 
-
-  if $rpc_backend == 'neutron.openstack.common.rpc.impl_kombu' {
+##
+## Update to accept rabbit as well -- new kilo distro defaults to shortnames for modules now, this should fix puppet to 
+## aslo add rabbit configs if user specifies rabbit in their yaml common instead of the default kombu ...
+##
+  if ($rpc_backend == 'neutron.openstack.common.rpc.impl_kombu') or ($rpc_backend == 'rabbit') {
     if ! $rabbit_password {
       fail('When rpc_backend is rabbitmq, you must set rabbit password')
     }
